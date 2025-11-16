@@ -1,8 +1,9 @@
-version: '3.9'
 
 services:
   app:
-    build: .
+    build:
+      context: ..
+      dockerfile: Docker/Dockerfile
     ports:
       - "3000:3000"
     environment:

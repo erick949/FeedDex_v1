@@ -1,21 +1,29 @@
-# Dockerfile
-FROM node:20-alpine
+# ---- Imagen base ----
+FROM python:3.13-slim
 
-# Crear directorio de trabajo
+# ---- Evitar buffers en stdout/stderr ----
+ENV PYTHONUNBUFFERED=1
+
+# ---- Crear directorio de trabajo ----
 WORKDIR /app
 
-# Copiar dependencias
-COPY backend/package*.json ./
+# ---- Instalar dependencias del sistema ----
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias
-RUN npm install
+# ---- Copiar requerimientos ----
+COPY ../feedtracker/requirements.txt /app/requirements.txt
 
-# Copiar todo el backend
-COPY backend/ .
+# ---- Instalar dependencias de Python ----
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Exponer puerto que usa tu app (ej: 3000)
-EXPOSE 3000
+# ---- Copiar todo el proyecto ----
+COPY ../feedtracker /app
 
-# Comando para iniciar tu app
-CMD ["node", "app.js"]
+# ---- Exponer puerto para Django ----
+EXPOSE 8000
 
+# ---- Comando por defecto ----
+CMD ["gunicorn", "feedtracker.wsgi:application", "--bind", "0.0.0.0:8000"]
