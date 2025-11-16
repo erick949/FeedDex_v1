@@ -14,13 +14,13 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # ---- Copiar requerimientos ----
-COPY ../feedtracker/requirements.txt /app/requirements.txt
+COPY feedtracker/requirements.txt /app/requirements.txt
 
 # ---- Instalar dependencias de Python ----
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # ---- Copiar todo el proyecto ----
-COPY ../feedtracker /app
+COPY feedtracker /app
 
 # ---- Exponer puerto para Django ----
 EXPOSE 8000
