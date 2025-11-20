@@ -30,10 +30,7 @@ CORS_ALLOWED_ORIGINS = True
 
 ALLOWED_HOSTS = [
     "*",
-    #'127.0.0.1',
-    'localhost'
-    #"feeddex-v1-1.onrender.com"
-   # '10.19.144.229'
+       "https://preguntas-git-main-erick949s-projects.vercel.app"
     ]
 
 
