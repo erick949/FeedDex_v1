@@ -1,11 +1,10 @@
-
 services:
   app:
     build:
       context: ..
       dockerfile: Docker/Dockerfile
     ports:
-      - "3000:3000"
+      - "8000:8000"
     environment:
       - DB_HOST=db
       - DB_USER=root
@@ -13,6 +12,8 @@ services:
       - DB_NAME=feeddex
     depends_on:
       - db
+    volumes:
+      - static_volume:/app/staticfiles  # Volumen para archivos estáticos
 
   db:
     image: mysql:8.0
@@ -27,4 +28,4 @@ services:
 
 volumes:
   db_data:
-
+  static_volume:  # Definición del volumen de archivos estáticos

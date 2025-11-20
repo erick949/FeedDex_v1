@@ -7,10 +7,18 @@ ENV PYTHONUNBUFFERED=1
 # ---- Crear directorio de trabajo ----
 WORKDIR /app
 
-# ---- Instalar dependencias del sistema ----
+# ---- Instalar dependencias del sistema necesarias para MySQL ----
 RUN apt-get update && apt-get install -y \
     build-essential \
-    libpq-dev \
+    default-libmysqlclient-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# ---- Instalar dependencias del sistema necesarias para MySQL ----
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # ---- Copiar requerimientos ----
@@ -21,6 +29,9 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # ---- Copiar todo el proyecto ----
 COPY feedtracker /app
+
+# ---- Recolectar archivos estáticos (incluye DRF) ----
+RUN python manage.py collectstatic --noinput
 
 # ---- Exponer puerto para Django ----
 EXPOSE 8000
