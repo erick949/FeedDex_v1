@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
+
+  
+
 # ---- Actualizar pip ----
 RUN pip install --upgrade pip
 
@@ -25,6 +28,9 @@ RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # ---- Copiar todo el proyecto ----
 COPY feedtracker /app
+
+# ---- Recolectar archivos estáticos (incluye DRF) ----
+RUN python manage.py collectstatic --noinput
 
 # ---- Exponer puerto para Django ----
 EXPOSE 8000

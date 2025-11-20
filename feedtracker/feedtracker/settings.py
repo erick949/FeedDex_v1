@@ -17,6 +17,11 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+STATIC_URL = '/static/'  # Asegúrate de la barra inicial y final
+
+# Carpeta donde collectstatic copiará los archivos
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -25,8 +30,13 @@ SECRET_KEY = 'django-insecure-)+z4qi@i3m@9%3r(=-#tfi^5k&4bgf(u9vxu1v4hy$+iir*1@q
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-CORS_ALLOWED_ORIGINS = True
 
+CORS_ALLOWED_ORIGINS = [
+    "https://preguntas-git-main-erick949s-projects.vercel.app",
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = [
     "*",
@@ -47,12 +57,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'whitenoise.runserver_nostatic',  # evita conflictos en runserver
 ]
 
 MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Sirve archivos estáticos
+
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+  
     'django.contrib.sessions.middleware.SessionMiddleware',
     
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -62,7 +76,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'feedtracker.urls'
-
+# Comprimir y cachear archivos estáticos
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -78,7 +93,7 @@ TEMPLATES = [
         },
     },
 ]
-CORS_ALLOW_CREDENTIALS = True
+
 WSGI_APPLICATION = 'feedtracker.wsgi.application'
 
 
@@ -132,14 +147,5 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
-
-STATIC_URL = 'static/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
